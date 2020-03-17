@@ -1,6 +1,9 @@
 from subprocess import Popen, PIPE
 import re
 
+def get_ip_from_str(ip_subnet):
+    return re.sub('^ipcalc\s+', '' , ip_subnet)
+
 def run_command(command):
     process = Popen(
         command, stdout=PIPE, stderr=PIPE
@@ -13,4 +16,3 @@ def ipcalc(subnet):
         ['ipcalc', '{}'.format(subnet)]
     )
     return command_output
-
