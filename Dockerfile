@@ -8,7 +8,7 @@ WORKDIR /workspace
 COPY . /workspace
 
 RUN apt-get update -y 
-RUN apt-get install -y make vim tcpdump curl wget gcc procps net-tools
+RUN apt-get install -y make vim tcpdump curl wget gcc procps net-tools ipcalc
 
 RUN pip install -r requirements.txt 
 
