@@ -1,3 +1,11 @@
 # How to Build a ChatOps Bot
+TBC
 
-! WIP !
+## WebEx Teams
+TBC
+
+## Slack
+TBC
+
+## Microsoft Teams
+TBC
