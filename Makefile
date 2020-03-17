@@ -64,12 +64,12 @@ update: ## Update pip requirements.txt
 build: ## build docker container.
 	docker build -t $(DOCKER_IMG):$(DOCKER_TAG) .
 
-run: ## run docker container
+run-detached: ## run docker container
 	docker run -d -t -v $$PWD:/workspace \
 	$(DOCKER_IMG):$(DOCKER_TAG)
 
 cli: ## connect to container shell
-	docker run -d -t -v $$PWD:/workspace \
+	docker run -it -v $$PWD:/workspace \
         $(DOCKER_IMG):$(DOCKER_TAG) /bin/bash	
 
 
