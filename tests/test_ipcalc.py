@@ -1,7 +1,6 @@
 import unittest
 
-
-class TestSubnetTool(unittest.TestCase):
+class TestIpcalcTool(unittest.TestCase):
     def setUp(self):
         from lib.ipcalc import ipcalc
 
