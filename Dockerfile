@@ -1,8 +1,8 @@
-FROM python:3.8-rc-slim-stretch
+FROM python:3.8
 
 LABEL version="0.0.1"
-LABEL description="ChatOps Demo"
-LABEL maintainer="Rick Donato"
+LABEL description="ChatOp Bot Container"
+LABEL maintainer="rick.donato@networktocode.com"
 
 WORKDIR /workspace
 COPY . /workspace

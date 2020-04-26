@@ -1,9 +1,10 @@
 .DEFAULT_GOAL := help
 
-DOCKER_IMG  = networktocode/chatops-demo
-DOCKER_TAG  = latest
-DOCKER_NAME = chatops-demo
-export PYROOT=.
+APP_NAME = chatbot
+DOCKER_TAG = latest # TBA
+NGROK_TOKEN_ENV = ${NGROK_TOKEN} 
+
+export $(cat .env | xargs)
 
 .PHONY: help
 help:
@@ -11,66 +12,87 @@ help:
 	sort | \
 	awk -F ':.*?## ' 'NF==2 {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'
 
-### -------------------------------------------------
-### FORMAT
-### -------------------------------------------------
-
-.PHONY: remove-yml-eol-spaces
-remove-yml-eol-spaces: ## Remove end of line spaces from yaml files
-	@echo "[*] Removing EOL YAML spaces."
-	@find ./ \( -name *.yaml -o -name *.yml \) | xargs sed -i  "s/\s *$$//g"
-
-.PHONY: black-check
-black-check: ## Perform Black formatting against py files. Check ONLY.
-	@echo "[*] Performing Black (Check)."
-	@. ./venv/bin/activate
-	@find $$PYROOT -name venv -prune -o -name '*.py' -exec black -v --check {} +
-
-.PHONY: black-diff
-black-diff: ## Perform formatting against py files. Diff ONLY.
-	@echo "[*] Performing Black (Diff)."
-	@. ./venv/bin/activate
-	@find $$PYROOT -name venv -prune -o -name '*.py' -exec black --diff {} +
-
-.PHONY: black
-black: ## Perform formatting against py files.
-	@echo "[*] Performing Black."
-	@. ./venv/bin/activate
-	@find $$PYROOT -name venv -prune -o -name '*.py' -exec black {} +
+#.PHONY: envar
+#envar:  ## Load .env#
+#	export $(cat .env | xargs)
 
 ### -------------------------------------------------
-### LINT
+### TESTING - NOT IMPLEMENTED YET
 ### -------------------------------------------------
 
-.PHONY: pylint
-lint-py: ## Perform linting against py files
-	@echo "[*] Performing PyLint."
-	@. ./venv/bin/activate
-	@find $$PYROOT -name venv -prune -o -name '*.py' -exec pylint {} +
+.PHONY: test
+test: 	lint unit ## Perform lint, then unit testing 
+
+.PHONY: lint
+lint:  ## Perform YAML linting
+	@echo "[*] Performing Lint"
+	yamllint -s .
+	@echo "[*] Completed Lint"
+
+.PHONY: unit
+unit: ## Perform unit tests
+	@echo "[*] Performing Unit Tests"
+	pytest -vvv 
+	@#echo "[*] Completed Unit Tests"
 
 ### -------------------------------------------------
-### OTHER
+### PIP
 ### -------------------------------------------------
 
 .PHONY: requirements
-update: ## Update pip requirements.txt
+update: ## Update Pip requirements.txt
 	@echo "[*] Updating pip requirements.txt"
 	pip freeze > requirements.txt
+
+### -------------------------------------------------
+### NGROK
+### -------------------------------------------------
+
+.PHONY: ngrok
+ngrok: ## Start ngrok tunnel
+	/opt/ngrok authtoken ${NGROK_TOKEN_ENV}
+	/opt/ngrok http -subdomain=chatop 5030
 
 ### -------------------------------------------------
 ### DOCKER
 ### -------------------------------------------------
 
-build: ## build docker container.
-	docker build -t $(DOCKER_IMG):$(DOCKER_TAG) .
+.PHONY: clean
+clean: ## Stop/Remove Docker container
+	docker stop ${APP_NAME} ; exit 0
+	docker rm ${APP_NAME} ; exit 0
 
-run-detached: ## run docker container
-	docker run -d -t -v $$PWD:/workspace \
-	$(DOCKER_IMG):$(DOCKER_TAG)
+.PHONY: cli
+cli: ## Enter Docker container
+	docker exec -it ${APP_NAME} /bin/bash
 
-cli: ## connect to container shell
-	docker run -it -v $$PWD:/workspace \
-        $(DOCKER_IMG):$(DOCKER_TAG) /bin/bash	
+.PHONY: logs
+logs: ## Enter Docker container
+	docker exec -it ${APP_NAME} cat /var/log/nautobot/info.log
+	@echo "=================================" 
+	docker exec -it ${APP_NAME} cat /var/log/nautobot/debug.log
+
+.PHONY: logs-t
+logs-t: ## Enter Docker container
+	docker exec -it ${APP_NAME} tail -f /var/log/*
+
+.PHONY: build
+build: 
+	docker stop ${APP_NAME} ; exit 0
+	docker rm ${APP_NAME} ; exit 0
+	docker build -t ${APP_NAME} .
+
+.PHONY: run
+run: ## Run Docker container
+	docker stop ${APP_NAME} ; exit 0
+	docker rm ${APP_NAME} ; exit 0
+	docker run -t -d \
+	--name ${APP_NAME} \
+	-v ~/.ssh:/root/.ssh:ro \
+	-v $$PWD:/workspace \
+	-p 5030:5030 \
+	${APP_NAME}
+
 
 
 # :%s/^[ ]\+/\t/g - automatically replace all tabs with spaces
