@@ -21,6 +21,15 @@ apt-get install ipcalc
 ```
 
 ## Setup Ngrok
-
+Download Ngrok into `/opt` via the instructions on https://dashboard.ngrok.com/get-started/setup.
+Once done, set your auth token and start your Ngrok tunnel.
+```
 /opt/ngrok authtoken ${NGROK_TOKEN_ENV}
 /opt/ngrok http -subdomain=chatop 5030
+```
+
+## Execute Chatbot
+You can now start the Chatbot via:
+```
+python lib/webex_teams_bot.py
+```
