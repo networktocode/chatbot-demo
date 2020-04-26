@@ -1,6 +1,8 @@
 # How to Build a ChatOps Bot
+This repo provides the required code, relating to the following articles, around - How to Build a ChatOps Bot.
+* How to Build a Chatops Bot in WexTeams (TBC)
 
-## Load Environment Variables
+## Load Environment Variable
 Set your environment variables by copying the example `.env` and defining your settings.
 Once done run `export $(cat .env | xargs)` to export your environment variables.
 ```
