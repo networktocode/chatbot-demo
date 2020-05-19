@@ -2,7 +2,7 @@ import unittest
 
 class TestIpcalcTool(unittest.TestCase):
     def setUp(self):
-        from lib.ipcalc import ipcalc
+        from chatbot.ipcalc import ipcalc
 
         self.ipcalc = ipcalc
 
