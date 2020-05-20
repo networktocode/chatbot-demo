@@ -1,6 +1,6 @@
 # How to Build a ChatOps Bot
 This repo provides the required code, relating to the following articles, around - How to Build a ChatOps Bot.
-* How to Build a Chatops Bot in WexTeams (TBC)
+* How to Build a ChatOp Bot in Webex Teams (TBC)
 
 ## Load Environment Variable
 Set your environment variables by copying the example `.env` and defining your settings.
@@ -12,7 +12,8 @@ cp .env-example .env
 ## Create Environment
 Next create a virtual environment and load your Python dependancies. 
 ```
-virtualenv --python=`which python3` venv
+virtualenv --python=/usr/bin/python3 venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -33,5 +34,5 @@ Once done, set your auth token and start your Ngrok tunnel.
 ## Execute Chatbot
 You can now start the Chatbot via:
 ```
-python lib/webex_teams_bot.py
+python chatbot/webex_teams_bot.py
 ```
