@@ -4,7 +4,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from flask import Flask, request
-from ipcalc import ipcalc
+from chatbot.ipcalc import ipcalc
 from webexteamssdk import WebexTeamsAPI
 
 
