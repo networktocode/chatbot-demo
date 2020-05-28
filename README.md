@@ -1,6 +1,6 @@
 # How to Build a ChatOps Bot
 This repo provides the required code, relating to the following articles, around - How to Build a ChatOps Bot.
-* How to Build a ChatOp Bot in Webex Teams (TBC)
+* How to Build a Webex Teams Chatbot
 
 ## Load Environment Variable
 Set your environment variables by copying the example `.env` and defining your settings.
